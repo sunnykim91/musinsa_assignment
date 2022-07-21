@@ -1,0 +1,21 @@
+.filterContainer {
+    display: flex;
+    justify-content: space-around;
+
+    .select {
+        width: 30%;
+        height: 30px;
+        font-size: 0.7em;
+        div {
+            padding: 0.5em;
+        }
+    }
+    .gender {
+        width: 15%;
+    }
+    .resetBtn {
+        width: 20%;
+        height: 30px;
+        padding: 0.5em;
+    }
+}

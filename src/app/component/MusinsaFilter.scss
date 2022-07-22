@@ -1,0 +1,23 @@
+.filterContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    div {
+        label {
+            display: block;
+        }
+        .select {
+            width: 100%;
+        }
+        .gender {
+            width: 100%;
+        }
+    }
+    .resetBtn {
+        width: 20%;
+        height: 30px;
+        background-color: aquamarine;
+        border-radius: 5px;
+        border: none;
+    }
+}

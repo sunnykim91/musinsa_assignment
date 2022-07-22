@@ -1,56 +1,102 @@
-import React from "react";
-import { Button } from "@mui/material";
+import React, { ChangeEvent } from "react";
 
 import "./MusinsaFilter.scss";
+import MusinsaSelect from "../shared/MusinsaSelect";
+import { MusinsaFilterType, MusinsaOptions } from "../type/interface";
 
 interface Props {
-    filters: any;
+    filters: MusinsaFilterType;
     onChange: (name: string, value: string) => void;
     onClick: () => void;
 }
 
 const MusinsaFilter = ({ filters, onChange, onClick }: Props) => {
-    const handleChangeselect = (e: any) => {
+    const handleChangeselect = (e: ChangeEvent<HTMLSelectElement>) => {
         onChange(e.target.name, e.target.value);
     };
 
+    const isAliveOptions: MusinsaOptions[] = [
+        {
+            title: "전체",
+            value: "ALL",
+        },
+        {
+            title: "생존인물만",
+            value: true,
+        },
+        {
+            title: "고인만",
+            value: false,
+        },
+    ];
+
+    const genderOptions: MusinsaOptions[] = [
+        {
+            title: "전체",
+            value: "ALL",
+        },
+        {
+            title: "남자",
+            value: "male",
+        },
+        {
+            title: "여자",
+            value: "female",
+        },
+    ];
+    const tvSeriesOptions: MusinsaOptions[] = [
+        {
+            title: "전체",
+            value: "ALL",
+        },
+        {
+            title: "tvSeries있음",
+            value: "true",
+        },
+        {
+            title: "tvSeries없음",
+            value: "false",
+        },
+    ];
+
     return (
         <div className="filterContainer">
-            <select
-                name="isAlive"
-                className="select"
-                value={filters.isAlive}
-                onChange={handleChangeselect}
-            >
-                <option value="true">생존인물만</option>
-                <option value="false">고인만</option>
-            </select>
-            <select
-                name="gender"
-                className="select gender"
-                value={filters.gender}
-                onChange={handleChangeselect}
-            >
-                <option value="male">남자</option>
-                <option value="female">여자</option>
-            </select>
-            <select
-                name="tvSeries"
-                className="select"
-                value="haveSeries"
-                onChange={handleChangeselect}
-            >
-                <option value="haveSeries">tvSeries있음</option>
-                <option value="dontHaveSeries">tvSeries없음</option>
-            </select>
-            <Button
-                className="resetBtn"
-                onClick={onClick}
-                variant="contained"
-                color="primary"
-            >
+            <div>
+                <label htmlFor="isAlive">생존여부</label>
+                <MusinsaSelect
+                    id="isAlive"
+                    name="isAlive"
+                    className="select"
+                    value={filters.isAlive}
+                    onChange={handleChangeselect}
+                    options={isAliveOptions}
+                />
+            </div>
+            <div>
+                <label htmlFor="gender">성별</label>
+                <MusinsaSelect
+                    id="gender"
+                    name="gender"
+                    className="select gender"
+                    value={filters.gender}
+                    onChange={handleChangeselect}
+                    options={genderOptions}
+                />
+            </div>
+            <div>
+                <label htmlFor="tvSeries">tv시리즈 유/무</label>
+                <MusinsaSelect
+                    id="tvSeries"
+                    name="tvSeries"
+                    className="tvSeries"
+                    value={filters.tvSeries}
+                    onChange={handleChangeselect}
+                    options={tvSeriesOptions}
+                />
+            </div>
+            <button className="resetBtn" onClick={onClick}>
                 초기화
-            </Button>
+            </button>
         </div>
     );
 };

@@ -1,20 +1,19 @@
-import { Button } from "@mui/material";
 import React from "react";
 import { MusinsaItem } from "../type/interface";
 
 import "./MusinsaItemListItem.scss";
 
 interface Props {
-    itemList: MusinsaItem[];
+    filterItemList: MusinsaItem[];
     handleDelete: (url: string) => void;
 }
 
 const MusinsaItemListItem = (props: Props) => {
-    const { itemList, handleDelete } = props;
+    const { filterItemList, handleDelete } = props;
 
     return (
         <>
-            {itemList?.map((item: MusinsaItem) => (
+            {filterItemList?.map((item: MusinsaItem) => (
                 <div className="itemContainer" key={item.url}>
                     <div className="itemTopArea">
                         <p className="name">name: {item.name}</p>
@@ -24,19 +23,21 @@ const MusinsaItemListItem = (props: Props) => {
                     </div>
                     <div className="itemMidArea">
                         <p className="title">title: {item.titles?.join()}</p>
-                        <Button
+                        <button
                             className="delBtn"
-                            variant="contained"
-                            color="error"
                             onClick={() => handleDelete(item.url)}
                         >
                             삭제
-                        </Button>
+                        </button>
                     </div>
                     <div className="itemBottomArea">
-                        <p className="books">books: {item.books.length}</p>
+                        <p className="books">
+                            books:{" "}
+                            {item.books[0] === "" ? 0 : item.books.length}
+                        </p>
                         <p className="tvSeries">
-                            tvSeries: {item.tvSeries.length}
+                            tvSeries:{" "}
+                            {item.tvSeries[0] === "" ? 0 : item.tvSeries.length}
                         </p>
                     </div>
                 </div>

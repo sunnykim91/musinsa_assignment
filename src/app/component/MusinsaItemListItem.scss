@@ -26,12 +26,18 @@
         justify-content: space-between;
         align-items: center;
         .title {
+            width: 85%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
         .delBtn {
-            height: 35px;
+            height: 30px;
+            width: 15%;
+            background-color: red;
+            border-radius: 5px;
+            color: white;
+            border: none;
         }
     }
     .itemBottomArea {

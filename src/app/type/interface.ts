@@ -16,3 +16,19 @@ export interface MusinsaItem {
     tvSeries: string[];
     playedBy: string[];
 }
+
+export interface MusinsaFilterRequestParams {
+    isAlive: string;
+    gender: string;
+}
+
+export interface MusinsaFilterType {
+    isAlive: string;
+    gender: string;
+    tvSeries: string;
+}
+
+export interface MusinsaOptions {
+    title: string;
+    value: any;
+}

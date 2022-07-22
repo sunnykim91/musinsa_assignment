@@ -5,25 +5,59 @@ import MusinsaItemList from "./component/MusinsaItemList";
 import { fetchItemList } from "./rest/MusinsalistRest";
 
 import "./MusinsaListPage.scss";
-import { MusinsaItem } from "./type/interface";
+import {
+    MusinsaFilterType,
+    MusinsaFilterRequestParams,
+    MusinsaItem,
+} from "./type/interface";
 
 const MusinsaListPage = () => {
-    const initFilterState = {
-        isAlive: true,
-        gender: "male",
+    const initFilterState: MusinsaFilterType = {
+        isAlive: "ALL",
+        gender: "ALL",
+        tvSeries: "ALL",
     };
 
-    const [filters, setFilters] = useState(initFilterState);
+    const initPage = () => {
+        const params: URLSearchParams = new URLSearchParams(
+            window.location.search
+        );
+        const pageNumber: string = params.get("page") || "1";
+
+        return Number(pageNumber);
+    };
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [page, setPage] = useState<number>(initPage);
+    const [filters, setFilters] = useState<MusinsaFilterType>(initFilterState);
     const [itemList, setItemList] = useState<MusinsaItem[]>([]);
+    const [filterItemList, setFilterItemList] = useState<MusinsaItem[]>([]);
 
     const fetchData = async () => {
-        const params = {
-            isAlive: filters.isAlive,
-            gender: filters.gender,
+        const params: MusinsaFilterRequestParams = {
+            isAlive: filters.isAlive === "ALL" ? "" : filters.isAlive,
+            gender: filters.gender === "ALL" ? "" : filters.gender,
         };
         try {
-            const { data } = await fetchItemList(params, 1);
+            setLoading(true);
+            const { data } = await fetchItemList(params, page);
+
+            let filterArr;
+            if (filters.tvSeries === "true") {
+                filterArr = data.filter((item: MusinsaItem) => {
+                    return item.tvSeries[0] !== "";
+                });
+            } else if (filters.tvSeries === "false") {
+                filterArr = data.filter((item: MusinsaItem) => {
+                    return item.tvSeries[0] === "";
+                });
+            } else {
+                filterArr = data;
+            }
+            setFilterItemList([...filterItemList, ...filterArr]);
+            setPage(page);
             setItemList(data);
+            setLoading(false);
         } catch (err) {
             console.error(err);
         }
@@ -31,22 +65,43 @@ const MusinsaListPage = () => {
 
     const handleChange = (name: string, value: string) => {
         setFilters({ ...filters, [name]: value });
+        setFilterItemList([]);
     };
 
     const initFilters = () => {
+        if (JSON.stringify(filters) === JSON.stringify(initFilterState)) {
+            fetchData();
+            return;
+        }
         setFilters(initFilterState);
     };
 
     const handleDelete = (url: string) => {
-        const filterArr = itemList.filter(
+        const filterArr = filterItemList.filter(
             (item: MusinsaItem) => item.url !== url
         );
-        setItemList(filterArr);
+        setFilterItemList(filterArr);
+    };
+
+    const handleScroll = () => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = document.documentElement.scrollTop;
+        const clientHeight = document.documentElement.clientHeight;
+        if (scrollTop + clientHeight >= scrollHeight && loading === false) {
+            setPage(Number(page) + 1);
+        }
     };
 
     useEffect(() => {
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    });
+
+    useEffect(() => {
         fetchData();
-    }, [filters]);
+    }, [filters.isAlive, filters.gender, filters.tvSeries, page]);
 
     return (
         <div className="mainContainer">
@@ -56,7 +111,10 @@ const MusinsaListPage = () => {
                 onChange={handleChange}
                 onClick={initFilters}
             />
-            <MusinsaItemList itemList={itemList} handleDelete={handleDelete} />
+            <MusinsaItemList
+                filterItemList={filterItemList}
+                handleDelete={handleDelete}
+            />
         </div>
     );
 };

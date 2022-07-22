@@ -5,14 +5,17 @@ import "./MusinsaItemList.scss";
 import MusinsaItemListItem from "./MusinsaItemListItem";
 
 interface Props {
-    itemList: MusinsaItem[];
+    filterItemList: MusinsaItem[];
     handleDelete: (url: string) => void;
 }
 
 const MusinsaItemList = (props: Props) => {
-    const { itemList, handleDelete } = props;
+    const { filterItemList, handleDelete } = props;
     return (
-        <MusinsaItemListItem itemList={itemList} handleDelete={handleDelete} />
+        <MusinsaItemListItem
+            filterItemList={filterItemList}
+            handleDelete={handleDelete}
+        />
     );
 };
 
